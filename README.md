@@ -11,6 +11,33 @@ similar to the way that `ssh-agent` or `gpg-agent` work. This allows the client
 to be used in a much simpler way, with the background agent taking care of
 maintaining the necessary state.
 
+## About this fork
+
+This is a fork of [doy/rbw](https://github.com/doy/rbw) with one change: it
+sends the `encryptedFor` field on cipher create and update requests, which
+[Vaultwarden](https://github.com/dani-garcia/vaultwarden) 1.37 and later
+require. Without it, adding or editing entries against such a server fails.
+The value is the user id the cipher is encrypted for, taken from the `sub`
+claim of the access token.
+
+The change is also available as a patch against upstream `main` in
+[`patches/`](patches):
+
+```sh
+git clone https://github.com/doy/rbw.git rbw-upstream
+cd rbw-upstream
+git am /path/to/rbw/patches/*.patch
+```
+
+Build and install the fork with:
+
+```sh
+cargo build --release
+install -m 755 target/release/rbw target/release/rbw-agent ~/.local/bin/
+```
+
+Everything else is upstream `rbw`; the sections below are its README.
+
 ## Maintenance
 
 I consider `rbw` to be essentially feature-complete for me at this point. While
